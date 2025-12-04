@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PlayStation Tournament Manager</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- Logo Top Left -->
+<div class="top-logo">
+  <img src="./logo.png" alt="Logo" />
+</div>
+
+<!-- Background Logo (Watermark) -->
+<div class="bg-logo">
+  <img src="./logo.png" alt="Background Logo" />
+</div>
+
+<!-- PS Background Effects -->
+<div class="ps-bg-shapes">
+  <div class="ps-shape triangle"></div>
+  <div class="ps-shape circle"></div>
+  <div class="ps-shape cross"></div>
+  <div class="ps-shape square"></div>
+</div>
+
+<!-- Main Page -->
+<div class="ps-container" id="page-main">
+  <div class="ps-header">
+    <div class="ps-logo">
+      <svg width="80" height="80" viewBox="0 0 50 50">
+        <text x="25" y="35" font-size="40" fill="#fff" text-anchor="middle" font-weight="bold">PS</text>
+      </svg>
+    </div>
+    <h1 class="ps-title">PlayStation Tournament</h1>
+    <div class="ps-subtitle">دوري كرة القدم الاحترافي</div>
+  </div>
+
+  <div class="ps-card main-menu">
+    <div class="menu-options">
+      <button class="ps-btn primary" onclick="enterAudience()">
+        <span class="btn-icon">👥</span>
+        <span>عرض النتائج</span>
+      </button>
+      <button class="ps-btn secondary" onclick="enterOrganizer()">
+        <span class="btn-icon">⚙️</span>
+        <span>لوحة التحكم</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="ps-card info-card">
+    <h3>🏆 لجنه الانشطه والمسبقات بابراشيه برج العرب والعامريه</h3>
+    <div class="quote">إِنَّ كَانَتْ تَسْلِيَةٌ مَا لِلْمَحَبَّةِ</div>
+  </div>
+</div>
+
+<!-- Login Page -->
+<div class="ps-container hidden" id="page-login">
+  <div class="ps-card">
+    <h2 class="card-title">🔐 تسجيل دخول المنظم</h2>
+    <div class="login-form">
+      <input id="login-user" class="ps-input" placeholder="اسم المستخدم" />
+      <input id="login-pass" class="ps-input" placeholder="كلمة المرور" type="password" />
+      <div class="btn-group">
+        <button class="ps-btn primary" onclick="doLogin()">دخول</button>
+        <button class="ps-btn ghost" onclick="goHome()">رجوع</button>
+      </div>
+      <div class="hint"> <strong></strong>  <strong></strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- Audience Page -->
+<div class="ps-container hidden" id="page-audience">
+  <div class="ps-card">
+    <h2 class="card-title">📊 عرض النتائج والجداول</h2>
+    <button class="ps-btn ghost" onclick="goHome()">🏠 الرئيسية</button>
+  </div>
+
+  <div id="audience-groups"></div>
+  <div id="audience-brackets"></div>
+</div>
+
+<!-- Organizer Page -->
+<div class="ps-container hidden" id="page-org">
+  <div class="ps-card">
+    <h2 class="card-title">⚙️ لوحة التحكم</h2>
+    <div class="btn-group">
+      <button class="ps-btn ghost" onclick="goHome()">خروج</button>
+      <button class="ps-btn danger" onclick="resetAll()">🗑️ مسح الجميع</button>
+    </div>
+  </div>
+
+  <!-- Teams Section -->
+  <div class="ps-card">
+    <h3 class="section-title">1️⃣ تسجيل الفرق</h3>
+    <div class="input-group">
+      <input id="team-input" class="ps-input" placeholder="اسم الفريق" />
+      <button class="ps-btn primary" onclick="addTeam()">➕ إضافة</button>
+    </div>
+    <div id="teams-list" class="teams-grid"></div>
+  </div>
+
+  <!-- Groups Distribution -->
+  <div class="ps-card">
+    <h3 class="section-title">2️⃣ توزيع المجموعات</h3>
+    <div class="control-group">
+      <label class="ps-label">عدد الفرق في كل مجموعة:</label>
+      <select id="teams-per-group" class="ps-select">
+        <option value="3">3 فرق</option>
+        <option value="4" selected>4 فرق</option>
+        <option value="5">5 فرق</option>
+        <option value="6">6 فرق</option>
+      </select>
+    </div>
+    <div class="btn-group">
+      <button class="ps-btn secondary" onclick="runGroupsDraw()">🎲 توزيع أوتوماتيكي</button>
+      <button class="ps-btn secondary" onclick="startManualDistribution()">✋ توزيع يدوي</button>
+    </div>
+    
+    <div id="manual-distribution" class="hidden manual-section">
+      <h4>توزيع الفرق يدوياً</h4>
+      <div id="manual-groups-container"></div>
+      <div class="btn-group">
+        <button class="ps-btn primary" onclick="saveManualDistribution()">حفظ</button>
+        <button class="ps-btn ghost" onclick="cancelManualDistribution()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Groups & Schedule -->
+  <div class="ps-card">
+    <h3 class="section-title">3️⃣ المجموعات وجدول المباريات</h3>
+    <div id="org-groups"></div>
+  </div>
+
+  <!-- Knockout Stage -->
+  <div class="ps-card">
+    <h3 class="section-title">4️⃣ الأدوار الإقصائية</h3>
+    <div class="btn-group knockout-btns">
+      <button class="ps-btn secondary" onclick="createKnockoutFromGroups()">إنشاء الدور الثاني</button>
+      <button class="ps-btn secondary" onclick="showRoundOptions('R2','R3')">إنشاء الدور الثالث</button>
+      <button class="ps-btn secondary" onclick="skipToSemiFinal()">⭐️ تخطي للنصف نهائي</button>
+      <button class="ps-btn secondary" onclick="showRoundOptions('R3','SF')">إنشاء نصف النهائي</button>
+      <button class="ps-btn secondary" onclick="advanceFinals()">النهائي + مركز ثالث</button>
+    </div>
+    
+    <div id="manual-knockout" class="hidden manual-section">
+      <h4 id="manual-knockout-title">توزيع المباريات يدوياً</h4>
+      <div id="manual-knockout-container"></div>
+      <div class="btn-group">
+        <button class="ps-btn primary" onclick="saveManualKnockout()">حفظ</button>
+        <button class="ps-btn ghost" onclick="cancelManualKnockout()">إلغاء</button>
+      </div>
+    </div>
+    
+    <div id="org-brackets"></div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script src="./script.js"></script>
+</body>
+</html>
