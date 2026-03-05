@@ -26,7 +26,7 @@ try {
   console.error('❌ Firebase initialization failed:', error);
 }
 /* Auth */
-const AUTH = { user: 'admin', pass: '1234' };
+const AUTH = { user: 'admin', pass: 'marson20263' };
 
 /* State */
 const state = {
